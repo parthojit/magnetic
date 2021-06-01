@@ -1,35 +1,49 @@
-let graph = document.getElementById("canvas");
-c = graph.getContext("2d");
-const size = 15;
+var depth = [];
+var time = [];
+var count = 0;
 
-function drawCanvas()
+ws.onmessage = function(event)
 {
+    recv = JSON.parse(event.data);
+    console.log(recv)
+    drawCanvas(recv, time, depth);
+}
+
+function drawCanvas(recv, time, depth)
+{
+    let graph = document.getElementById("canvas");
+    c = graph.getContext("2d");
+    const size = 15;
 	c.beginPath();
 	c.lineWidth = 3;
 	c.strokeStyle = "white";
 
-	for (var row2 = 0; row2 < 20; row2++) {
-		for (var column2 = 0; column2 < 40; column2++) {
-			var x2 = column2 * size;
-			var y2 = row2 * size;
-			c.rect(x2, y2, size, size);
+	depth.push(recv.depth);
+	time.push(recv.time);
+
+	for (var column = 0; column < 40; column++)
+		for (var row = 0; row < 20; row++) {
+		{
+			var x = column * size;
+			var y = row * size;
+			c.rect(x, y, size, size);
 			c.fillStyle="black";
 			c.fill();
 			c.stroke();
-			if (column2 > 25)
+			if (column > 25)
 			{
 				c.beginPath();
 				c.fillStyle="brown";
-				c.fillRect(x2, y2, size, size);
+				c.fillRect(x, y, size, size);
 			}
-			if (row2 < 5 && column2 > 25)
+			if (row < depth[count] && column > 25)
 			{
 				c.beginPath();
 				c.fillStyle="#ADD8E6";
-				c.fillRect(x2,y2, size, size);
+				c.fillRect(x,y, size, size);
 			}
 		}
 	}
+	count = count + 1;
 	c.closePath();
 }
-drawCanvas();

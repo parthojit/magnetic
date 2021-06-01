@@ -9,7 +9,7 @@ async def depth(websocket, path):
     while True:
         data = {
             "time": time.time()-start,
-            "depth": random.randrange(5,25),
+            "depth": random.randrange(0,20),
         }
         snd = json.dumps(data)
         await websocket.send(snd)
